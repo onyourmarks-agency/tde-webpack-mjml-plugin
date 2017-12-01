@@ -33,9 +33,9 @@ module.exports = {
 
 module.exports = {
     plugins: [
-        new MjmlStore('path/to/mjml', {
-            extension: '.twig',
-            outputPath: 'path/to/html'
+        new MjmlStore(inputPath, {
+            extension: options.extension,
+            outputPath: options.outputPath
         }),
     ]
 }
