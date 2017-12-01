@@ -13,12 +13,12 @@ npm install --save-dev tde-webpack-mjml-plugin
 In your `webpack.config.js`
 
 ```javascript
-var ManifestPlugin = require('tde-webpack-mjml-plugin');
+var MjmlPlugin = require('tde-webpack-mjml-plugin');
 
 module.exports = {
     // ...
     plugins: [
-        new MjmlStore(paths.MJML, {
+        new MjmlPlugin(paths.MJML, {
             extension: '.twig',
             outputPath: 'path/to/mjml'
         }),
@@ -33,7 +33,7 @@ module.exports = {
 
 module.exports = {
     plugins: [
-        new MjmlStore(inputPath, {
+        new MjmlPlugin(inputPath, {
             extension: options.extension,
             outputPath: options.outputPath
         }),
