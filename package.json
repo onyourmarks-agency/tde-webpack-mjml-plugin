@@ -1,6 +1,6 @@
 {
   "name": "tde-webpack-mjml-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webpack MJML plugin for converting MJML files to a given location",
   "main": "index.js",
   "repository": "https://github.com/tdeNL/tde-webpack-mjml-plugin",
