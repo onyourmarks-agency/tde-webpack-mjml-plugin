@@ -57,7 +57,7 @@ The default output extension
 ### `options.outputPath`
 
 Type: `String`<br>
-Default: `"""`
+Default: `""`
 
 The path where HTML files should be written to
 
