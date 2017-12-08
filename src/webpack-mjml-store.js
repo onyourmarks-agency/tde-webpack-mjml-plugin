@@ -35,6 +35,7 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
         glob(that.inputPath + '/**/*.mjml', function (err, files) {
             for (let fileKey in files) {
                 let file = files[fileKey];
+                compilation.fileDependencies.push(file);
 
                 let outputFile = file
                     .replace(that.inputPath, that.options.outputPath)
