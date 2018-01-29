@@ -13,8 +13,9 @@
     "webpack": "2 || 3"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
+    "fs-extra": "^5.0.0",
     "glob": "^7.1.2",
+    "lodash": "^4.17.4",
     "mjml": "^3.3.5"
   }
 }
