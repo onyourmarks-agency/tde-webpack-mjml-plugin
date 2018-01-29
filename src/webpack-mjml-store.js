@@ -2,7 +2,7 @@
 
 const mjmlEngine = require('mjml');
 const glob = require('glob');
-const fs = require('fs');
+const fs = require('fs-extra');
 const _ = require('lodash');
 
 /**
@@ -42,6 +42,7 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
                     .replace('.mjml', that.options.extension);
 
                 that.convertFile(file)
+                    .then((contents) => that.ensureFileExists(outputFile, contents))
                     .then((contents) => that.writeFile(outputFile, contents))
                     .then(callback());
             }
@@ -83,6 +84,23 @@ WebpackMjmlStore.prototype.writeFile = function (file, contents) {
             }
 
             resolve(true);
+        });
+    });
+};
+
+/**
+ * @param file
+ * @param contents
+ * @returns {Promise}
+ */
+WebpackMjmlStore.prototype.ensureFileExists = function (file, contents) {
+    return new Promise(function (resolve, reject) {
+        fs.ensureFile(file, function (err) {
+            if (err) {
+                throw err;
+            }
+
+            resolve(contents);
         });
     });
 };
