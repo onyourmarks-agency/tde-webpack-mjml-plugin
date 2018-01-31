@@ -1,6 +1,6 @@
 'use strict';
 
-const { mjml2html } = require('mjml');
+const mjml2html = require('mjml');
 const glob = require('glob');
 const fs = require('fs-extra');
 const _ = require('lodash');
