@@ -9,8 +9,8 @@ const _ = require('lodash');
  * @type {{extension: string, outputPath: string}}
  */
 const defaultOptions = {
-  extension: '.html',
-  outputPath: ''
+    extension: '.html',
+    outputPath: ''
 };
 
 /**
@@ -19,35 +19,35 @@ const defaultOptions = {
  * @constructor
  */
 const WebpackMjmlStore = function (inputPath, options) {
-  this.inputPath = inputPath;
-  this.options = _.defaults(options, defaultOptions);
+    this.inputPath = inputPath;
+    this.options = _.defaults(options, defaultOptions);
 };
 
 /**
  * @param compiler
  */
 WebpackMjmlStore.prototype.apply = function (compiler) {
-  let that = this;
+    let that = this;
 
-  compiler.plugin('emit', function (compilation, callback) {
-    fs.existsSync(that.options.outputPath) || fs.mkdirSync(that.options.outputPath);
+    compiler.plugin('emit', function (compilation, callback) {
+        fs.existsSync(that.options.outputPath) || fs.mkdirSync(that.options.outputPath);
 
-    glob(that.inputPath + '/**/*.mjml', function (err, files) {
-      for (let fileKey in files) {
-        let file = files[fileKey];
-        compilation.fileDependencies.push(file);
+        glob(that.inputPath + '/**/*.mjml', function (err, files) {
+            for (let fileKey in files) {
+                let file = files[fileKey];
+                compilation.fileDependencies.push(file);
 
-        let outputFile = file
-          .replace(that.inputPath, that.options.outputPath)
-          .replace('.mjml', that.options.extension);
+                let outputFile = file
+                    .replace(that.inputPath, that.options.outputPath)
+                    .replace('.mjml', that.options.extension);
 
-        that.convertFile(file)
-          .then((contents) => that.ensureFileExists(outputFile, contents))
-          .then((contents) => that.writeFile(outputFile, contents))
-          .then(callback());
-      }
+                that.convertFile(file)
+                    .then((contents) => that.ensureFileExists(outputFile, contents))
+                    .then((contents) => that.writeFile(outputFile, contents))
+                    .then(callback());
+            }
+        });
     });
-  });
 };
 
 /**
@@ -55,36 +55,20 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
  * @returns {Promise}
  */
 WebpackMjmlStore.prototype.convertFile = function (file) {
-  return new Promise(function (resolve, reject) {
-    fs.readFile(file, 'utf8', function (err, contents) {
-      let response = mjmlEngine.mjml2html(contents);
-      if (response.errors.length) {
-        console.log('\x1b[36m', 'MJML Warnings in file "' + file + '":', '\x1b[0m');
-      }
+    return new Promise (function(resolve, reject) {
+        fs.readFile(file, 'utf8', function (err, contents) {
+            let response = mjmlEngine.mjml2html(contents);
+            if (response.errors.length) {
+                console.log('\x1b[36m', 'MJML Warnings in file "' + file + '":', '\x1b[0m');
+            }
 
-      for (let errorKey in response.errors) {
-        console.log("  -  ", response.errors[errorKey].formattedMessage);
-      }
+            for (let errorKey in response.errors) {
+                console.log("  -  ", response.errors[errorKey].formattedMessage);
+            }
 
-      resolve(response.html);
+            resolve(response.html);
+        });
     });
-  });
-};
-
-/**
- * @param file
- * @returns {Promise}
- */
-WebpackMjmlStore.prototype.ensureFileExists = function (file, contents) {
-  return new Promise(function (resolve, reject) {
-    fs.ensureFile(file, function (err) {
-      if (err) {
-        throw err;
-      }
-
-      resolve(contents);
-    });
-  });
 };
 
 /**
@@ -93,15 +77,32 @@ WebpackMjmlStore.prototype.ensureFileExists = function (file, contents) {
  * @returns {Promise}
  */
 WebpackMjmlStore.prototype.writeFile = function (file, contents) {
-  return new Promise(function (resolve, reject) {
-    fs.writeFile(file, contents, function (err) {
-      if (err) {
-        throw err;
-      }
+    return new Promise (function(resolve, reject) {
+        fs.writeFile(file, contents, function (err) {
+            if (err) {
+                throw err;
+            }
 
-      resolve(true);
+            resolve(true);
+        });
     });
-  });
+};
+
+/**
+ * @param file
+ * @param contents
+ * @returns {Promise}
+ */
+WebpackMjmlStore.prototype.ensureFileExists = function (file, contents) {
+    return new Promise(function (resolve, reject) {
+        fs.ensureFile(file, function (err) {
+            if (err) {
+                throw err;
+            }
+
+            resolve(contents);
+        });
+    });
 };
 
 /**
