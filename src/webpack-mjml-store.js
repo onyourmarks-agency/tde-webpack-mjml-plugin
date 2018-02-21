@@ -33,6 +33,10 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
         fs.existsSync(that.options.outputPath) || fs.mkdirSync(that.options.outputPath);
 
         glob(that.inputPath + '/**/*.mjml', function (err, files) {
+            if ( !files.length ) {
+               return callback();
+            }
+
             for (let fileKey in files) {
                 let file = files[fileKey];
                 compilation.fileDependencies.push(file);
