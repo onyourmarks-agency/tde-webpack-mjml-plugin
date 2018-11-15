@@ -1,6 +1,6 @@
 'use strict';
 
-const mjmlEngine = require('mjml');
+const mjml2html = require('mjml').default;
 const glob = require('glob');
 const fs = require('fs-extra');
 const _ = require('lodash');
@@ -65,7 +65,7 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
 WebpackMjmlStore.prototype.convertFile = function (file) {
   return new Promise(function (resolve, reject) {
     fs.readFile(file, 'utf8', function (err, contents) {
-      let response = mjmlEngine.mjml2html(contents);
+      let response = mjml2html(contents);
       if (response.errors.length) {
         console.log('\x1b[36m', 'MJML Warnings in file "' + file + '":', '\x1b[0m');
       }
