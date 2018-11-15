@@ -1,4 +1,4 @@
-# TDE Webpack MJMM Plugin 
+# TDE Webpack MJML Plugin 
 
 Webpack plugin for converting MJML files to HTML
 
