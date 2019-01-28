@@ -10,6 +10,7 @@ const _ = require('lodash');
  */
 const defaultOptions = {
   extension: '.html',
+  filePath: '.',
   outputPath: ''
 };
 
@@ -63,9 +64,14 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
  * @returns {Promise}
  */
 WebpackMjmlStore.prototype.convertFile = function (file) {
+  let that = this;
+
   return new Promise(function (resolve, reject) {
     fs.readFile(file, 'utf8', function (err, contents) {
-      let response = mjml2html(contents);
+      let response = mjml2html(contents, {
+        filePath: that.options.filePath
+      });
+
       if (response.errors.length) {
         console.log('\x1b[36m', 'MJML Warnings in file "' + file + '":', '\x1b[0m');
       }
