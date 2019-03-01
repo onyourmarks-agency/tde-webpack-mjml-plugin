@@ -1,6 +1,6 @@
 'use strict';
 
-const mjml2html = require('mjml').default;
+const mjml2html = require('mjml');
 const glob = require('glob');
 const fs = require('fs-extra');
 const _ = require('lodash');
@@ -31,10 +31,13 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
 
   compiler.plugin('emit', function (compilation, callback) {
     fs.ensureDirSync(that.options.outputPath);
+
     glob(that.inputPath + '/**/*.mjml', function (err, files) {
       if (!files.length) {
         return callback();
       }
+
+      var tasks = [];
 
       for (let fileKey in files) {
         let file = files[fileKey];
@@ -49,12 +52,28 @@ WebpackMjmlStore.prototype.apply = function (compiler) {
           .replace(that.inputPath, that.options.outputPath)
           .replace('.mjml', that.options.extension);
 
-        that.convertFile(file)
-          .then((contents) => that.ensureFileExists(outputFile, contents))
-          .then((contents) => that.writeFile(outputFile, contents))
-          .then(callback());
+        tasks.push(that.handleFile(file, outputFile));
       }
+
+      Promise.all(tasks)
+        .then(callback());
     });
+
+  });
+};
+
+/**
+ * @param file
+ * @param outputFile
+ * @returns {Promise}
+ */
+WebpackMjmlStore.prototype.handleFile = function (file, outputFile) {
+  let that = this;
+  return new Promise(function (resolve, reject) {
+    that.convertFile(file)
+      .then((contents) => that.ensureFileExists(outputFile, contents))
+      .then((contents) => that.writeFile(outputFile, contents))
+      .then(resolve());
   });
 };
 
@@ -90,7 +109,6 @@ WebpackMjmlStore.prototype.writeFile = function (file, contents) {
       if (err) {
         throw err;
       }
-
       resolve(true);
     });
   });
