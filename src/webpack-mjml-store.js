@@ -20,8 +20,9 @@ const defaultOptions = {
  * @constructor
  */
 const WebpackMjmlStore = function (inputPath, options) {
-  this.inputPath = inputPath;
-  this.options = _.defaults(options, defaultOptions);
+    this.inputPath = inputPath.replace(/\\/g,'/');
+    this.options = _.defaults(options, defaultOptions);
+    this.options.outputPath = this.options.outputPath.replace(/\\/g,'/');
 };
 
 /**
