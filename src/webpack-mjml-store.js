@@ -31,37 +31,39 @@ const WebpackMjmlStore = function (inputPath, options) {
 WebpackMjmlStore.prototype.apply = function (compiler) {
   let that = this;
 
-  compiler.plugin('emit', function (compilation, callback) {
-    fs.ensureDirSync(that.options.outputPath);
+  compiler.hooks.emit.tapAsync(
+    'webpack-mjml-store',
+    function (compilation, callback) {
+      fs.ensureDirSync(that.options.outputPath);
 
-    glob(that.inputPath + '/**/*.mjml', function (err, files) {
-      if (!files.length) {
-        return callback();
-      }
-
-      var tasks = [];
-
-      for (let fileKey in files) {
-        let file = files[fileKey];
-
-        if (compilation.fileDependencies.add) {
-          compilation.fileDependencies.add(file);
-        } else {
-          compilation.fileDependencies.push(file);
+      glob(that.inputPath + '/**/*.mjml', function (err, files) {
+        if (!files.length) {
+          return callback();
         }
 
-        let outputFile = file
-          .replace(that.inputPath, that.options.outputPath)
-          .replace('.mjml', that.options.extension);
+        var tasks = [];
 
-        tasks.push(that.handleFile(file, outputFile));
-      }
+        for (let fileKey in files) {
+          let file = files[fileKey];
 
-      Promise.all(tasks)
-        .then(callback());
-    });
+          if (compilation.fileDependencies.add) {
+            compilation.fileDependencies.add(file);
+          } else {
+            compilation.fileDependencies.push(file);
+          }
 
-  });
+          let outputFile = file
+            .replace(that.inputPath, that.options.outputPath)
+            .replace('.mjml', that.options.extension);
+
+          tasks.push(that.handleFile(file, outputFile));
+        }
+
+        Promise.all(tasks)
+          .then(callback());
+      });
+    }
+  );
 };
 
 /**

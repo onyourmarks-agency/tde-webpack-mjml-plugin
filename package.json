@@ -1,21 +1,21 @@
 {
   "name": "tde-webpack-mjml-plugin",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Webpack MJML plugin for converting MJML files to a given location",
   "main": "index.js",
   "repository": "https://github.com/tdeNL/tde-webpack-mjml-plugin",
   "author": "Jordi Kroon <jkroon@tde.nl>",
   "license": "MIT",
   "engines": {
-    "node": ">=4"
+    "node": ">=14"
   },
   "peerDependencies": {
     "webpack": "4"
   },
   "dependencies": {
-    "fs-extra": "^5.0.0",
-    "glob": "^7.1.2",
-    "lodash": "^4.17.4",
-    "mjml": "^4.2.0"
+    "fs-extra": "^9.1.0",
+    "glob": "^7.1.6",
+    "lodash": "^4.17.21",
+    "mjml": "^4.9.0"
   }
 }
